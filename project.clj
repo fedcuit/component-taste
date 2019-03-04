@@ -10,6 +10,7 @@
                  [ring/ring-jetty-adapter "1.6.3"]
                  [ring/ring-json "0.4.0"]
                  [ring/ring-defaults "0.3.2"]
+                 [compojure "1.6.1"]
                  ]
   :main ^:skip-aot integrant-taste.core
   :target-path "target/%s"

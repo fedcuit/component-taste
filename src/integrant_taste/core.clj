@@ -3,7 +3,9 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.util.response :refer [response]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [ring.middleware.json :refer [wrap-json-response]]
+            [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
+            [compojure.core :refer :all]
+            [compojure.route :as route]
             [com.walmartlabs.lacinia :refer [execute]]
             [com.walmartlabs.lacinia.util :refer [attach-resolvers]]
             [com.walmartlabs.lacinia.schema :as ls])
@@ -29,13 +31,26 @@
     (response result)
     ))
 
-(def app
-  (-> gql
+(defroutes graphql
+           (context "/graphql" []
+             (GET "/" [] "GraphiQL")
+             (POST "/" [body] (println body))
+             ))
+
+(defroutes app
+           (GET "/" [] "Hello Compojure")
+           graphql
+           (route/not-found "Page Not Found")
+           )
+
+(def handler
+  (-> app
+      wrap-json-body
       wrap-json-response
-      (wrap-defaults site-defaults)))
+      (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (run-jetty app {:port 8000})
+  (run-jetty handler {:port 8000})
   )
