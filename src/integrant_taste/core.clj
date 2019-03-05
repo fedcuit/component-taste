@@ -2,7 +2,7 @@
   (:require [clojure.edn :as edn]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.util.response :refer [response]]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [compojure.core :refer :all]
             [compojure.route :as route]
@@ -12,45 +12,34 @@
   (:gen-class))
 
 (def resolvers
-  {
-   :get-hero  (constantly {})
-   :get-droid (constantly {})
-   })
+  {:get-hero  (constantly {})
+   :get-droid (constantly {})})
 
 (def app-schema
   (-> "resources/schema.edn"
       slurp
       edn/read-string
       (attach-resolvers resolvers)
-      ls/compile)
-  )
-
-(defn gql
-  [request]
-  (let [result (execute app-schema "{hero {name}}" nil nil)]
-    (response result)
-    ))
+      ls/compile))
 
 (defroutes graphql
-           (context "/graphql" []
-             (GET "/" [] "GraphiQL")
-             (POST "/" [body] (println body))
-             ))
+  (context "/graphql" []
+    (GET "/" [] "GraphiQL")
+    (POST "/" {{:keys [query variables]} :body}
+      (response (execute app-schema query variables nil)))))
 
 (defroutes app
-           (GET "/" [] "Hello Compojure")
-           graphql
-           (route/not-found "Page Not Found")
-           )
+  (GET "/" [] "Hello Compojure")
+  graphql
+  (route/not-found "Page Not Found"))
 
 (def handler
   (-> app
-      wrap-json-body
+      (wrap-json-body {:keywords? true})
       wrap-json-response
-      (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))))
+      (wrap-defaults api-defaults)))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (run-jetty handler {:port 8000})
-  )
+  (run-jetty handler {:port 8000}))

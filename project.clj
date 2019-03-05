@@ -12,6 +12,7 @@
                  [ring/ring-defaults "0.3.2"]
                  [compojure "1.6.1"]
                  ]
+  :plugins [[lein-cljfmt "0.6.4"]]
   :main ^:skip-aot integrant-taste.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
