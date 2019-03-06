@@ -15,4 +15,6 @@
   :plugins [[lein-cljfmt "0.6.4"]]
   :main ^:skip-aot integrant-taste.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all}
+             :dev     {:main         user
+                       :source-paths ["dev"]}})
