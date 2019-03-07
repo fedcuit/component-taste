@@ -1,7 +1,8 @@
 (ns user
   (:require
     [integrant-taste.schema :as s]
-    [com.walmartlabs.lacinia :as lacinia]))
+    [com.walmartlabs.lacinia :as lacinia]
+    [clojure.tools.namespace.repl :refer [refresh]]))
 
 (def schema (s/load-schema))
 

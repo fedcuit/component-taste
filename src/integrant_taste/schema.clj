@@ -7,7 +7,7 @@
 
 (defn resolver-map
   []
-  {:query/game-by-id (fn [ctx args p] {:name "Game of Thrones"})})
+  {:query/game-by-id (fn [ctx args p] nil)})
 
 (defn load-schema
   []
