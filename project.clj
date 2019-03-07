@@ -15,7 +15,7 @@
   :plugins [[lein-cljfmt "0.6.4"]]
   :main ^:skip-aot integrant-taste.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}
-             :repl    {:main         user
-                       :dependencies [[org.clojure/tools.namespace "0.2.11"]]}
-             :dev     {:source-paths ["dev"]}})
+  :profiles {:uberjar {:aot  :all}
+             :repl    {:source-paths ["dev"]
+                       :main user
+                       :dependencies [[org.clojure/tools.namespace "0.2.11"]]}})

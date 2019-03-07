@@ -7,22 +7,21 @@
             [compojure.core :refer :all]
             [compojure.route :as route]
             [com.walmartlabs.lacinia :refer [execute]]
-            [integrant-taste.schema :refer [load-schema]]
-            )
+            [integrant-taste.schema :refer [load-schema]])
   (:gen-class))
 
 (def schema (load-schema))
 
 (defroutes graphql
-           (context "/graphql" []
-             (GET "/" [] "GraphiQL")
-             (POST "/" {{:keys [query variables]} :body}
-               (response (execute schema query variables nil)))))
+  (context "/graphql" []
+    (GET "/" [] "GraphiQL")
+    (POST "/" {{:keys [query variables]} :body}
+      (response (execute schema query variables nil)))))
 
 (defroutes app
-           (GET "/" [] "Hello Compojure")
-           graphql
-           (route/not-found "Page Not Found"))
+  (GET "/" [] "Hello Compojure")
+  graphql
+  (route/not-found "Page Not Found"))
 
 (def handler
   (-> app
