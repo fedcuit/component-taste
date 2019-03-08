@@ -16,6 +16,5 @@
   :main ^:skip-aot integrant-taste.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot  :all}
-             :repl    {:source-paths ["dev"]
-                       :main user
+             :repl    {:main user
                        :dependencies [[org.clojure/tools.namespace "0.2.11"]]}})
