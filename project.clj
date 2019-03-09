@@ -6,6 +6,7 @@
   :dependencies [
                  [org.clojure/clojure "1.9.0"]
                  [com.walmartlabs/lacinia-pedestal "0.5.0"]
+                 [com.stuartsierra/component "0.3.2"]
                  [io.aviso/logging "0.2.0"]
                  ]
   :plugins [[lein-cljfmt "0.6.4"]]

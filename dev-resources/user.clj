@@ -4,12 +4,12 @@
     [com.walmartlabs.lacinia :as lacinia]
     [com.walmartlabs.lacinia.pedestal :as lp]
     [io.pedestal.http :as http]
+    [integrant-taste.system :as system]
     [clojure.java.browse :refer [browse-url]]
     [clojure.tools.namespace.repl :refer [refresh]]
-    [clojure.walk :as walk])
+    [clojure.walk :as walk]
+    [com.stuartsierra.component :as component])
   (:import (clojure.lang IPersistentMap)))
-
-(def schema (s/load-schema))
 
 (defn simplify
   "Converts all ordered maps nested within the map into standard hash maps, and
@@ -23,36 +23,25 @@
         :else node))
     m))
 
+(defonce system (system/new-system))
+
 (defn q
   [query-string]
-  (-> (lacinia/execute schema query-string nil nil)
+  (-> system
+      :schema-provider
+      :schme
+    (lacinia/execute query-string nil nil)
       simplify))
-
-(defonce server nil)
-
-(defn start-server
-  [_]
-  (let [server (-> schema
-                   (lp/service-map {:graphiql true})
-                   http/create-server
-                   http/start)]
-    (browse-url "http://localhost:8888")
-    server)
-  )
-
-(defn stop-server
-  [server]
-  (http/stop server)
-  nil)
 
 (defn start
   []
-  (alter-var-root #'server start-server)
+  (alter-var-root #'system component/start-system)
+  (browse-url "http://localhost:8888/")
   :started)
 
 (defn stop
   []
-  (when server (alter-var-root #'server stop-server))
+  (when system (alter-var-root #'system component/stop-system))
   :stopped)
 
 (defn reload

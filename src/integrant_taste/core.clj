@@ -3,5 +3,4 @@
 
 (defn -main
   [arglist]
-  nil
-  )
+  nil)
