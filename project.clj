@@ -5,16 +5,12 @@
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [
                  [org.clojure/clojure "1.9.0"]
-                 [com.walmartlabs/lacinia "0.21.0"]
-                 [ring/ring-core "1.6.3"]
-                 [ring/ring-jetty-adapter "1.6.3"]
-                 [ring/ring-json "0.4.0"]
-                 [ring/ring-defaults "0.3.2"]
-                 [compojure "1.6.1"]
+                 [com.walmartlabs/lacinia-pedestal "0.5.0"]
+                 [io.aviso/logging "0.2.0"]
                  ]
   :plugins [[lein-cljfmt "0.6.4"]]
   :main ^:skip-aot integrant-taste.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot  :all}
-             :repl    {:main user
+  :profiles {:uberjar {:aot :all}
+             :repl    {:main         user
                        :dependencies [[org.clojure/tools.namespace "0.2.11"]]}})
