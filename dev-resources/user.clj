@@ -30,13 +30,12 @@
   (-> system
       :schema-provider
       :schme
-    (lacinia/execute query-string nil nil)
+      (lacinia/execute query-string nil nil)
       simplify))
 
 (defn start
   []
   (alter-var-root #'system component/start-system)
-  (browse-url "http://localhost:8888/")
   :started)
 
 (defn stop

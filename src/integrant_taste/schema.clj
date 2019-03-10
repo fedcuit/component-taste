@@ -11,6 +11,11 @@
   (let [{:keys [id]} args]
     (get games-map id)))
 
+(defn- resolve-element-by-id
+  [members-map ctx args parent]
+  (let [{:keys [id]} args]
+    (get members-map id)))
+
 (defn- resolve-board-game-designers
   [designers-map ctx args parent]
   (let [{:keys [designers]} parent]
@@ -23,6 +28,36 @@
          vals
          (filter #(contains? (:designers %) id)))))
 
+(defn- average
+  [ns]
+  (let [sum (reduce + 0 ns)
+        cnt (count ns)]
+    (/ sum cnt)))
+
+(defn- game-ratings
+  [ratings game_id]
+  (filter #(= (:game_id %) game_id) ratings))
+
+(defn- rating-summary
+  [ratings]
+  (fn [ctx args game]
+    (let [{:keys [id]} game
+          ratings (game-ratings ratings id)]
+      {:count (count ratings) :average (average (map :rating ratings))})))
+
+(defn- game-rating->game
+  [games-map]
+  (fn [ctx args rating]
+    (let [{:keys [game]} rating]
+      (get games-map game))))
+
+(defn- member-ratings
+  [ratings]
+  (fn [ctx args member]
+    (let [{:keys [id]} member]
+      (->> ratings
+           (filter #(= id (:member_id %)))))))
+
 (defn- entity-map
   "Get a list of entities from map and convert it into a map keyed by :id."
   [m k]
@@ -34,10 +69,15 @@
                      slurp
                      edn/read-string)
         games-map (entity-map cgg-data :games)
+        members-map (entity-map cgg-data :members)
         designers-map (entity-map cgg-data :designers)]
-    {:query/game-by-id    (partial resolve-game-by-id games-map)
-     :BoardGame/designers (partial resolve-board-game-designers designers-map)
-     :Designer/games      (partial resolve-designer-games games-map)}))
+    {:query/game-by-id         (partial resolve-game-by-id games-map)
+     :query/member-by-id       (partial resolve-element-by-id members-map)
+     :BoardGame/designers      (partial resolve-board-game-designers designers-map)
+     :BoardGame/rating-summary (rating-summary (:ratings cgg-data))
+     :GameRating/game          (game-rating->game games-map)
+     :Designer/games           (partial resolve-designer-games games-map)
+     :Member/ratings           (member-ratings (:ratings cgg-data))}))
 
 (defn load-schema
   []
