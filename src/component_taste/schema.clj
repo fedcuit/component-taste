@@ -1,4 +1,4 @@
-(ns integrant-taste.schema
+(ns component-taste.schema
   (:require
    [clojure.java.io :as io]
    [clojure.edn :as edn]
@@ -93,7 +93,3 @@
     (assoc this :schema (load-schema)))
   (stop [this]
     (assoc this :schema nil)))
-
-(defn new-schema-provider
-  []
-  {:schema-provider (map->SchemaProvider {})})

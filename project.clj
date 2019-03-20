@@ -1,6 +1,4 @@
-(defproject integrant-taste "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+(defproject component-taste "0.1.0-SNAPSHOT"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
             :url  "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [
@@ -10,8 +8,8 @@
                  [io.aviso/logging "0.2.0"]
                  ]
   :plugins [[lein-cljfmt "0.6.4"]]
-  :main ^:skip-aot integrant-taste.core
+  :main ^:skip-aot component-taste.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :repl    {:main         user
-                       :dependencies [[org.clojure/tools.namespace "0.2.11"]]}})
+             :dev {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
+             :repl {:main user}})

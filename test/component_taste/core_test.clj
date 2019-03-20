@@ -1,6 +1,6 @@
-(ns integrant-taste.core-test
+(ns component-taste.core-test
   (:require [clojure.test :refer :all]
-            [integrant-taste.core :refer :all]))
+            [component-taste.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

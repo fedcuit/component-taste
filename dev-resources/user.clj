@@ -1,37 +1,10 @@
 (ns user
   (:require
-    [integrant-taste.schema :as s]
-    [com.walmartlabs.lacinia :as lacinia]
-    [com.walmartlabs.lacinia.pedestal :as lp]
-    [io.pedestal.http :as http]
-    [integrant-taste.system :as system]
-    [clojure.java.browse :refer [browse-url]]
+    [component-taste.system :as system]
     [clojure.tools.namespace.repl :refer [refresh]]
-    [clojure.walk :as walk]
-    [com.stuartsierra.component :as component])
-  (:import (clojure.lang IPersistentMap)))
-
-(defn simplify
-  "Converts all ordered maps nested within the map into standard hash maps, and
-   sequences into vectors, which makes for easier constants in the tests, and eliminates ordering problems."
-  [m]
-  (walk/postwalk
-    (fn [node]
-      (cond
-        (instance? IPersistentMap node) (into {} node)
-        (seq? node) (vec node)
-        :else node))
-    m))
+    [com.stuartsierra.component :as component]))
 
 (defonce system (system/new-system))
-
-(defn q
-  [query-string]
-  (-> system
-      :schema-provider
-      :schme
-      (lacinia/execute query-string nil nil)
-      simplify))
 
 (defn start
   []
@@ -45,7 +18,5 @@
 
 (defn reload
   []
-  (refresh)
   (stop)
-  (start)
-  )
+  (refresh :after 'user/start))
